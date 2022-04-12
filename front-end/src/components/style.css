@@ -1,0 +1,74 @@
+.logo-scale {
+  font-size: 2rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.logo-scale:hover {
+  transform: scale(1.5);
+  cursor: pointer;
+}
+
+.theme-color {
+  color: #a3a3a3;
+}
+.theme-color:hover {
+  color: #0000c9;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+}
+.file-input {
+  font-size: 1.8rem;
+  color: #fff;
+}
+.doc-img,
+.doc img {
+  max-height: 30vh;
+  width: 16vw;
+  object-fit: contain;
+}
+.link-active {
+  margin-top: 5px;
+  text-decoration: none;
+  color: #f43f5e;
+  border-bottom: 4px solid #f43f5e;
+}
+
+.icon-active {
+  text-decoration: none;
+  color: #f43f5e;
+}
+
+.date-class {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.timeline-card {
+  position: relative;
+}
+.doc {
+  position: relative;
+}
+.doc input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+}
+@media all and (max-width: 768px) {
+  .icon {
+    font-size: 1.5rem;
+  }
+  .file-input {
+    font-size: 1rem;
+  }
+  .doc img,
+  .doc-img {
+    max-height: 30vh;
+    width: 60vw;
+  }
+}
