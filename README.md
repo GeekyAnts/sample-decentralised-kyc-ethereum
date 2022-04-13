@@ -210,3 +210,101 @@ The blockchain architecture and the DLT allow us to collect information from var
 | kycRequestAdded           | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when banks adds new KYC request                                   |
 | kycReRequested            | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when bank re-requests for KYC documents permission.               |
 | kycStatusChanged          | Request ID,<br>Bank Name,<br>Customer Name,<br>Customer metamask `address`,<br>Bank metamask `address`,<br>KYC verification `status`    | Triggered when bank rejects/verifies KYC documents                          |
+
+### Versions
+
+Compiler: solc: 0.8.12+commit.f00d7308
+
+Truffle: v5.5.2
+
+Node: v14.17.0
+
+### Deployed to Rinkeby
+
+Contract Address: https://rinkeby.etherscan.io/address/0xB6976cfdA272536c51b0F251855EDa48164485EF
+
+Contract Creator: https://rinkeby.etherscan.io/address/0xF2C9ef86c3c98Fc8C265469624dA35af2D72Fa06
+
+Tx Hash of contract creation :https://rinkeby.etherscan.io/tx/0x6e0f54b7579fc6e9fcd00aa37d182ab2896471461f46ca09a21f63368bf12eb4
+
+### Quick Start
+
+1.  cd into project repro
+
+        cd sample-supply-chain-ethereum
+        cd blockchain
+
+2.  download node libraries
+
+        npm install
+
+3.  Download/Start ganache
+
+https://truffleframework.com/ganache
+
+4.  Compiling contracts
+
+        truffle compile
+
+5.  Migrating to ganache
+
+_Note depending on ganache cli/ui you my need to change truffle.js port settings Current listing on port : 7545_
+
+        truffle migrate --network development  --reset --all
+
+6.  Testing on ganache
+
+        truffle test
+
+7.  Switch to FrontEnd & Testing
+
+_Note Change settings to your Contract address to point to local_
+
+          cd ..
+          cd front-end
+          npm install
+          npm start
+
+8.  Migrating to Rinkeby
+
+_Note Change truffle settings to your Contract Creator address within the "from" rinkeby configuration_
+
+        truffle migrate --network rinkeby  --reset --all
+
+9.  Start FrontEnd on Rinkeby
+
+_Note Revert back all your local configurations & configure it to point to rinkeby_
+
+        npm start
+
+# How frontend works
+
+## KYC-Chain Admin Dashboard
+
+<br>
+<img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/2.png?raw=true"><br>
+<br>
+
+## Add FI via Admin Dashboard
+
+<br>
+<img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/3.png?raw=true"><br>
+<br>
+
+## Financial Institution Dashboard
+
+<br>
+<img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/5.png?raw=true"><br>
+<br>
+
+## KYC Request to Customer
+
+<br>
+<img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/7.png?raw=true"><br>
+<br>
+
+## Customer Dashboard
+
+<br>
+<img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/15.png?raw=true"><br>
+<br>
