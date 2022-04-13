@@ -308,3 +308,8 @@ _Note Revert back all your local configurations & configure it to point to rinke
 <br>
 <img src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/15.png?raw=true"><br>
 <br>
+
+## Admin Flow
+
+https://user-images.githubusercontent.com/32259133/163247595-47a5932a-ac38-4515-9cf6-deda421c55f1.mp4
+
