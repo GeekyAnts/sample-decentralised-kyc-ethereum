@@ -1,5 +1,9 @@
 # Decentralised KYC Etherum
 
+<p align="center">
+  <img width="100%"  src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/1.png?raw=true">
+</p>
+
 KYC is a process by which banks obtain information about the identity and address of the purchasers. It’s a regulator governed process of performing due diligence for verifying the identity of clients. This process helps to make sure that banks’ services aren’t misused. The banks are responsible for completing the KYC procedure while opening accounts. Banks also are required to periodically update their customers’ KYC details. KYC may be a manual, time-consuming, and redundant across institutions. Sharing KYC information on Blockchain would enable financial institutions to deliver better compliance outcomes, increase efficiency, and improve customer experience.
 
 ## Problem
