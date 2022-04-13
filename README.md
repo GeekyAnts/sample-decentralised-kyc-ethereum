@@ -1,3 +1,13 @@
+# Decentralised KYC Etherum
+
+## How it works
+
+<p align="center">
+  <img width="100%"  
+      alt='KYC'
+       src="?raw=true">
+</p>
+
 ### Modifiers
 
 ```c++
