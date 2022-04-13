@@ -313,3 +313,11 @@ _Note Revert back all your local configurations & configure it to point to rinke
 
 https://user-images.githubusercontent.com/32259133/163247595-47a5932a-ac38-4515-9cf6-deda421c55f1.mp4
 
+## Bank Flow
+https://user-images.githubusercontent.com/32259133/163248225-b13856b3-50c4-48fd-964c-a2c9b74afa34.mp4
+
+## Customer Flow
+https://user-images.githubusercontent.com/32259133/163248175-c6ab3fa0-3008-4b40-be21-e47725b811c8.mp4
+
+
+
