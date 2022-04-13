@@ -1,11 +1,42 @@
 # Decentralised KYC Etherum
 
+KYC is a process by which banks obtain information about the identity and address of the purchasers. It’s a regulator governed process of performing due diligence for verifying the identity of clients. This process helps to make sure that banks’ services aren’t misused. The banks are responsible for completing the KYC procedure while opening accounts. Banks also are required to periodically update their customers’ KYC details. KYC may be a manual, time-consuming, and redundant across institutions. Sharing KYC information on Blockchain would enable financial institutions to deliver better compliance outcomes, increase efficiency, and improve customer experience.
+
+## Problem
+
+Each company has to verify your identity somehow, and it’s particularly important for financial institutions. From this ‘know your customer,’ or KYC protocols was the rise to assist companies to ensure they know who they’re doing business with. Typically, this involves an extended, drawn-out practice where certain documents are shown, and a few kinds of background checks or verification takes place.
+In the traditional KYC system, each bank will conduct its identity check i.e. each user is checked individually by an individual organization or government structure. Hence, there is a waste of time for checking each identity from scratch.
+
+## Solution
+
+The blockchain architecture and the DLT allow us to collect information from various service providers into one cryptographically secure and unchanging database that does not need a third party to verify the authenticity of the knowledge. It makes it possible to form a system where the user will only need to undergo the KYC procedure once to verify his/her identity.
+
+## Required:
+
+- Different Roles: Admin Financial Institution(e.g RBI), Financial Institutions, & Customers
+- Smart Contract consisting of all the rules and protocols required for KYC document flow. We have created 2 contacts for Banks and Customers, and inherited those contract KYC contract.
+- Blockchain Network to deploy the Contract. We have used Rinkeby for our contract.
+- Website for user Interface where Users according to their role can access informfation. We have created webpage with React & Native Base.
+
+## Assumptions:
+
+- Admin Financial Institution can add verified FIs.
+- Admin can make FIs active/inactive w.r.t to any actions.
+- FIs can add Customers and request for KYC from Customers.
+- Customer can approve/reject the KYC request from FIs.
+- If Customer approve the KYC request, a notiifcation (via email/phone no.) will be sent to FI and FI can access the Customer's KYC documents such as Aadhar Card, Pancard, Photo Id, Signature, etc for verification.
+- FIs can approve/reject the Customer's data after verifing.
+- If FI rejects Customer's KYC verification, a notiifcation (via email/phone no.) will be sent to Customer with the reason.
+- Customer can update the KYC documents and the update notification will get trigger to all the connected FIs.
+- All the user roles should have mandatory metamask address on the main network.
+- The User who deploy the contract to the main net will be considered as Admin FI.
+
 ## How it works
 
 <p align="center">
   <img width="100%"  
       alt='KYC'
-       src="?raw=true">
+       src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/kyc-small.jpg?raw=true">
 </p>
 
 ### Modifiers
