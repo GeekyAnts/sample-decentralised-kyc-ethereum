@@ -4,7 +4,7 @@
 
 ## Important Links
 
-1. [Demo link](https://geekyants.page.link/supplychain)<br />
+1. [Demo link](https://geekyants.page.link/kyc)<br />
 2. [Contract Address](https://rinkeby.etherscan.io/address/0x421C98710E16ECA364F08a3e96aDDf7212C735EB)<br />
 3. [Contract Creator](https://rinkeby.etherscan.io/address/0x2d8706e94e187c4e1806a8f5b4c1e5137460784d)<br />
 4. [Tx Hash of contract creation](https://rinkeby.etherscan.io/tx/0x41fba32c09071030f59423adab6844dfafa042f1e4995576e9fb8d56f274c2b9)<br />
