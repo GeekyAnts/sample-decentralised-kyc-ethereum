@@ -5,9 +5,9 @@
 ## Important Links
 
 1. [Demo link](https://geekyants.page.link/supplychain)<br />
-2. [Contract Address](https://rinkeby.etherscan.io/address/0xeD4Ab31BD523402809CEB0D8D4073E8A736C76bE)<br />
-3. [Contract Creator](https://rinkeby.etherscan.io/address/0xF2C9ef86c3c98Fc8C265469624dA35af2D72Fa06)<br />
-4. [Tx Hash of contract creation](https://rinkeby.etherscan.io/tx/0x5497693608f7b1236546256a8e0c9317ea0f1737844d02883821ca667ff638de)<br />
+2. [Contract Address](https://rinkeby.etherscan.io/address/0x421C98710E16ECA364F08a3e96aDDf7212C735EB)<br />
+3. [Contract Creator](https://rinkeby.etherscan.io/address/0x2d8706e94e187c4e1806a8f5b4c1e5137460784d)<br />
+4. [Tx Hash of contract creation](https://rinkeby.etherscan.io/tx/0x41fba32c09071030f59423adab6844dfafa042f1e4995576e9fb8d56f274c2b9)<br />
 
 # Decentralised KYC Etherum
 
@@ -49,6 +49,12 @@ The blockchain architecture and the DLT allow us to collect information from var
       alt='KYC'
        src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/kyc-small.jpg?raw=true">
 </p>
+
+# Let's start with KYC Smart Contracts
+
+[Do platform Setup! ](SETUP.md)
+
+## Solidity
 
 ### Modifiers
 
@@ -275,6 +281,18 @@ _Note Change truffle settings to your Contract Creator address within the "from"
 _Note Revert back all your local configurations & configure it to point to rinkeby_
 
         npm start
+
+## Team ✨
+
+Meet the amazing team who developed this project.
+
+<table>
+  <tr>
+    <td align="center"><a href="https://in.linkedin.com/in/sur950"><img src="https://avatars.githubusercontent.com/u/46712434?v=4" width="100px;" alt=""/><br /><sub><b>Suresh Konakanchi</b></sub></a><br /><a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum" title="Code">💻</a> <a href="https://geekyants.github.io/sample-decentralised-kyc-ethereum/" title="Documentation">📖</a> <a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/issues" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://twitter.com/95pushkar"><img src="https://avatars.githubusercontent.com/u/41522922?v=4" width="100px;" alt=""/><br /><sub><b>Pushkar Kumar</b></sub></a><br /><a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum" title="Code">💻</a> <a href="https://geekyants.github.io/sample-decentralised-kyc-ethereum/" title="Documentation">📖</a> <a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/issues" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://twitter.com/ruchikaSjv"><img src="https://avatars.githubusercontent.com/u/32259133?v=4" width="100px;" alt=""/><br /><sub><b>Ruchika Gupta</b></sub></a><br /><a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum" title="Code">💻</a> <a href="https://geekyants.github.io/sample-decentralised-kyc-ethereum/" title="Documentation">📖</a> <a href="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/issues" title="Maintenance">🚧</a></td>
+  </tr>
+  </table>
 
 # How frontend works
 
