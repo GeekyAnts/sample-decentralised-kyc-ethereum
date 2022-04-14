@@ -11,11 +11,14 @@ import { AddPage as AdminAddPage } from "../pages/admin-dashboard/components/";
 import { useAuthContext } from "../contexts/auth-context";
 import { EntityDetails } from "../pages/entity-details/";
 import Loader from "../components/loader";
+import { Role } from "../repository";
+import { BankDetails } from "../pages/dashboard/components/bank-details";
+import { BankProfilePage } from "../pages/institute-dashboard/components";
 
 function Routes() {
   const {
     state: {
-      userDetails: { type },
+      userDetails: { role },
       loading,
     },
   } = useAuthContext();
@@ -32,22 +35,32 @@ function Routes() {
           path="/dashboard"
           element={
             <>
-              {type === "customer" && <Dashboard />}
-              {type === "admin" && <AdminDashboard />}
-              {type === "institution" && <InstituteDashboard />}
+              {role === Role.Customer && <Dashboard />}
+              {role === Role.Admin && <AdminDashboard />}
+              {role === Role.Bank && <InstituteDashboard />}
             </>
           }
         />
-        <Route path="/profile" element={<ProfilePage />} />
+        {(role === Role.Customer || role === Role.Bank) && (
+          <Route
+            path="/profile"
+            element={
+              <>
+                {role === Role.Customer && <ProfilePage />}
+                {role === Role.Bank && <BankProfilePage />}
+              </>
+            }
+          />
+        )}
         <Route
           path="/dashboard/add"
-          element={
-            <>{type === "institution" ? <AddPage /> : <AdminAddPage />}</>
-          }
+          element={<>{role === Role.Bank ? <AddPage /> : <AdminAddPage />}</>}
         />
         <Route
           path="/:id"
-          element={<>{type === "institution" && <EntityDetails />}</>}
+          element={
+            <>{role === Role.Bank ? <EntityDetails /> : <BankDetails />}</>
+          }
         />
       </Route>
     </ParentRoutes>

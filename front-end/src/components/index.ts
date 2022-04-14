@@ -1,2 +1,2 @@
 export * from "./layout";
-export * from "./confirm-action";
+export * from "./pagination";

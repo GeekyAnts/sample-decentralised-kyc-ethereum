@@ -1,8 +1,15 @@
-# Decentralised KYC Etherum
-
 <p align="center">
   <img width="100%"  src="https://github.com/GeekyAnts/sample-decentralised-kyc-ethereum/blob/main/assets/1.png?raw=true">
 </p>
+
+## Important Links
+
+1. [Demo link](https://geekyants.page.link/supplychain)<br />
+2. [Contract Address](https://rinkeby.etherscan.io/address/0xeD4Ab31BD523402809CEB0D8D4073E8A736C76bE)<br />
+3. [Contract Creator](https://rinkeby.etherscan.io/address/0xF2C9ef86c3c98Fc8C265469624dA35af2D72Fa06)<br />
+4. [Tx Hash of contract creation](https://rinkeby.etherscan.io/tx/0x5497693608f7b1236546256a8e0c9317ea0f1737844d02883821ca667ff638de)<br />
+
+# Decentralised KYC Etherum
 
 KYC is a process by which banks obtain information about the identity and address of the purchasers. It’s a regulator governed process of performing due diligence for verifying the identity of clients. This process helps to make sure that banks’ services aren’t misused. The banks are responsible for completing the KYC procedure while opening accounts. Banks also are required to periodically update their customers’ KYC details. KYC may be a manual, time-consuming, and redundant across institutions. Sharing KYC information on Blockchain would enable financial institutions to deliver better compliance outcomes, increase efficiency, and improve customer experience.
 
@@ -197,19 +204,19 @@ The blockchain architecture and the DLT allow us to collect information from var
 
 | **Event Name**            | **Params**                                                                                                                              | **Description**                                                             |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| bankAdded                 | metamask `address`,<br>name,<br>email,<br>ifsc code                                                                                     | Triggered when a new bank is added by admin (RBI)                           |
-| bankUpdated               | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when bank updates it's details                                    |
-| bankActivated             | metamask `address`,<br>name                                                                                                             | Triggered when admin activates bank                                         |
-| bankDeactivated           | metamask `address`,<br>name                                                                                                             | Triggered when admin de-activates bank                                      |
+| BankAdded                 | metamask `address`,<br>name,<br>email,<br>ifsc code                                                                                     | Triggered when a new bank is added by admin (RBI)                           |
+| BankUpdated               | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when bank updates it's details                                    |
+| BankActivated             | metamask `address`,<br>name                                                                                                             | Triggered when admin activates bank                                         |
+| BankDeactivated           | metamask `address`,<br>name                                                                                                             | Triggered when admin de-activates bank                                      |
 |                           |                                                                                                                                         |                                                                             |
-| customerAdded             | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when bank adds new customer                                       |
-| customerDataUpdated       | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when customer updates his/her profile                             |
-| dataHashUpdated           | metamask `address`,<br>name,<br>datahash                                                                                                | Triggered when customer updates his/her KYC documents                       |
-| dataHashPermissionChanged | Request ID,<br>Bank Name,<br>Customer Name,<br>Customer metamask `address`,<br>Bank metamask `address`,<br>Datahash permission `status` | Triggered when customer revokes/grants permission to his/her KYC documents. |
+| CustomerAdded             | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when bank adds new customer                                       |
+| CustomerDataUpdated       | metamask `address`,<br>name,<br>email                                                                                                   | Triggered when customer updates his/her profile                             |
+| DataHashUpdated           | metamask `address`,<br>name,<br>datahash                                                                                                | Triggered when customer updates his/her KYC documents                       |
+| DataHashPermissionChanged | Request ID,<br>Bank Name,<br>Customer Name,<br>Customer metamask `address`,<br>Bank metamask `address`,<br>Datahash permission `status` | Triggered when customer revokes/grants permission to his/her KYC documents. |
 |                           |                                                                                                                                         |                                                                             |
-| kycRequestAdded           | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when banks adds new KYC request                                   |
-| kycReRequested            | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when bank re-requests for KYC documents permission.               |
-| kycStatusChanged          | Request ID,<br>Bank Name,<br>Customer Name,<br>Customer metamask `address`,<br>Bank metamask `address`,<br>KYC verification `status`    | Triggered when bank rejects/verifies KYC documents                          |
+| KycRequestAdded           | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when banks adds new KYC request                                   |
+| KycReRequested            | Request ID,<br>Bank Name,<br>Customer Name                                                                                              | Triggered when bank re-requests for KYC documents permission.               |
+| KycStatusChanged          | Request ID,<br>Bank Name,<br>Customer Name,<br>Customer metamask `address`,<br>Bank metamask `address`,<br>KYC verification `status`    | Triggered when bank rejects/verifies KYC documents                          |
 
 ### Versions
 
@@ -218,14 +225,6 @@ Compiler: solc: 0.8.12+commit.f00d7308
 Truffle: v5.5.2
 
 Node: v14.17.0
-
-### Deployed to Rinkeby
-
-Contract Address: https://rinkeby.etherscan.io/address/0xB6976cfdA272536c51b0F251855EDa48164485EF
-
-Contract Creator: https://rinkeby.etherscan.io/address/0xF2C9ef86c3c98Fc8C265469624dA35af2D72Fa06
-
-Tx Hash of contract creation :https://rinkeby.etherscan.io/tx/0x6e0f54b7579fc6e9fcd00aa37d182ab2896471461f46ca09a21f63368bf12eb4
 
 ### Quick Start
 
@@ -314,10 +313,9 @@ _Note Revert back all your local configurations & configure it to point to rinke
 https://user-images.githubusercontent.com/32259133/163247595-47a5932a-ac38-4515-9cf6-deda421c55f1.mp4
 
 ## Bank Flow
+
 https://user-images.githubusercontent.com/32259133/163248225-b13856b3-50c4-48fd-964c-a2c9b74afa34.mp4
 
 ## Customer Flow
+
 https://user-images.githubusercontent.com/32259133/163248175-c6ab3fa0-3008-4b40-be21-e47725b811c8.mp4
-
-
-

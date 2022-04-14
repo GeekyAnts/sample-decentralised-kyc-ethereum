@@ -1,50 +1,75 @@
-import { Box, Button, HStack, Text, VStack } from "native-base";
-import { useState } from "react";
+import {
+  Box,
+  HStack,
+  Spinner,
+  Text,
+  VStack,
+  Heading,
+  Center,
+  Button,
+} from "native-base";
+import { useEffect } from "react";
 import { CaseCount } from "../../components/case-count";
 import { DetailsCard } from "./components/details-card";
 import { DetailsHeader } from "./components/details-header";
 import { Layout } from "../../components/layout";
-import { SearchBox } from "../../components/search-box";
 import { AddEntity } from "../../components/add-entity";
-import { useNavigate } from "react-router-dom";
-
-const data = [
-  {
-    bank_name: "Icici bank limited",
-    status: "active",
-    date: "1647862405",
-    address: "0xd034739c2ae807c70cd703092b946f62a49509d1",
-  },
-  {
-    bank_name: "HDFC BANK LIMITED",
-    status: "inactive",
-    date: "1647862507",
-    address: "0xd034739c2ae807c70cd703092b946f62a49509d1",
-  },
-  {
-    bank_name: "BANK OF BARODA",
-    status: "active",
-    date: "1647862521",
-    address: "0xd034739c2ae807c70cd703092b946f62a49509d1",
-  },
-];
+import { useLocation, useNavigate } from "react-router-dom";
+import "../../styles/style.css";
+import { useApi } from "../../hooks/useApi";
+import { useAuthContext } from "../../contexts/auth-context";
+import { Bank, KycServices } from "../../repository";
+import { countCaseAdmin } from "../../utils";
+import { Pagination } from "../../components";
 
 export const AdminDashboard = () => {
-  const [searchText, setSearchText] = useState("");
-  const [insititutionData, setinsititutionData] = useState(data);
-  const navigate = useNavigate();
-  const filterBySearch = (data: any) => {
-    let searchData;
-    if (searchText === "") {
-      return data;
-    } else {
-      searchData = data.filter(
-        (items: any) =>
-          items.bank_name &&
-          items?.bank_name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      return searchData;
-    }
+  const {
+    state: { data, fetchedData, totalPageNumber, pageNo },
+  } = useAuthContext();
+  const { listLoading, handlePaginationAdmin, getBankList } = useApi();
+  const state = useLocation();
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    const { search } = state;
+    search.length === 0 && navigate("/dashboard?page=1");
+  }, []);
+
+  useEffect(() => {
+    const { search } = state;
+    search.length !== 0 &&
+      handlePaginationAdmin(+search.slice(-1), fetchedData, totalPageNumber);
+  }, [state]);
+  
+  useEffect(() => {
+    listenToggleActivateEvent();
+    listenToggleDeActivateEvent();
+    listenEditEvent();
+  }, []);
+
+  const listenEditEvent = async () => {
+    KycServices.eventContract.on(
+      "BankUpdated",
+      async (id_: string, name: string, email: string) => {
+        await getBankList(pageNo);
+      }
+    );
+  };
+  const listenToggleActivateEvent = async () => {
+    KycServices.eventContract.on(
+      "BankActivated",
+      async (id_: string, name: string) => {
+        await getBankList(pageNo);
+      }
+    );
+  };
+  const listenToggleDeActivateEvent = async () => {
+    KycServices.eventContract.on(
+      "BankDeactivated",
+      async (id_: string, name: string) => {
+        await getBankList(pageNo);
+      }
+    );
   };
 
   return (
@@ -60,9 +85,15 @@ export const AdminDashboard = () => {
             My Dashboard
           </Text>
           <HStack space={10} flexDirection={["column", "row"]}>
-            <CaseCount count={284} heading={"Active Institutions"} />
-            <CaseCount count={192} heading={"Inactive Institutions"} />
-            <CaseCount count={16} heading={"Active Institutions"} />
+            <CaseCount count={data.length} heading={"Total Institutions"} />
+            <CaseCount
+              count={countCaseAdmin(data as Bank[]).inActive}
+              heading={"Inactive Institutions"}
+            />
+            <CaseCount
+              count={countCaseAdmin(data as Bank[]).active}
+              heading={"Active Institutions"}
+            />
             <AddEntity entity="Institution" route="/dashboard/add" />
           </HStack>
         </VStack>
@@ -82,32 +113,35 @@ export const AdminDashboard = () => {
             >
               My Individual Cases
             </Text>
-            <SearchBox searchText={searchText} setSearchText={setSearchText} />
           </HStack>
           <VStack alignItems={"center"} space={5}>
             <Box width={["90vw", "100%"]} overflow={["scroll", "unset"]}>
               <DetailsHeader />
-              {searchText === "" ? (
-                insititutionData.map((item: any) => <DetailsCard item={item} />)
-              ) : filterBySearch(data).length === 0 ? (
-                <Button
-                  onPress={() => navigate("/dashboard/add")}
-                  bgColor="orange.400"
-                  maxWidth={"300px"}
-                  mx="auto"
-                  _hover={{ bgColor: "orange.300" }}
-                >
-                  Add Bank
-                </Button>
+              {listLoading ? (
+                <Spinner size="lg" />
               ) : (
-                filterBySearch(data).map((item: any) => (
-                  <DetailsCard item={item} />
-                ))
+                <VStack flexDir={"column-reverse"}>
+                  {data.length === 0 ? (
+                    <Center>
+                      <Heading color="white" mb="4">
+                        No Bank Found
+                      </Heading>
+                      <Button onPress={() => navigate("/dashboard/add")}>
+                        Add one
+                      </Button>
+                    </Center>
+                  ) : (
+                    (data as Bank[]).map((item: Bank) => (
+                      <DetailsCard item={item} />
+                    ))
+                  )}
+                </VStack>
               )}
             </Box>
           </VStack>
         </VStack>
       </Box>
+      <Pagination />
     </Layout>
   );
 };

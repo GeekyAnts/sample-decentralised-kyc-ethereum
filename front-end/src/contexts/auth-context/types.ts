@@ -1,16 +1,17 @@
+import { Bank, Customer, KycRequest, User } from "../../repository";
 import { AUTH } from "./action-types";
 
-export type UserType = "customer" | "admin" | "institution";
-
-export type UserDetails = {
-  address: string;
-  type: UserType;
+export type FetchedDataType = {
+  [key: string]: (Customer | Bank | User | KycRequest)[];
 };
-
 export type InitialStateType = {
-  userDetails: UserDetails;
+  userDetails: User;
   isUserLoggedIn: boolean;
   loading: boolean;
+  pageNo: number;
+  totalPageNumber: number;
+  data: (Customer | Bank | User | KycRequest)[];
+  fetchedData: FetchedDataType;
 };
 
 export type ActionMap<M extends { [index: string]: any }> = {
@@ -25,9 +26,18 @@ export type ActionMap<M extends { [index: string]: any }> = {
 };
 
 export type AuthPayload = {
-  [AUTH.SET_USER_DETAILS]: UserDetails;
+  [AUTH.SET_USER_DETAILS]: User;
   [AUTH.SET_LOGIN_STATUS]: boolean;
   [AUTH.SET_LOADING]: boolean;
+  [AUTH.SET_DATA]: {
+    data: (Customer | Bank | User | KycRequest)[];
+    totalPages: number;
+    currentPage: number;
+  };
+  [AUTH.SET_FETCHED_DATA]: {
+    pageNo: string;
+    data: (Customer | Bank | User | KycRequest)[];
+  };
   [AUTH.RESET]: any;
 };
 

@@ -24,11 +24,15 @@ export const DetailsHeader = () => {
         </Text>
       </Box>
 
-      <Box textAlign={"center"} width={"1/5"}>
-        <Text fontWeight={"light"} color={"white"} fontSize={"lg"}>
-          Action
-        </Text>
-      </Box>
+      <Text
+        textAlign={"center"}
+        width={"1/5"}
+        fontWeight={"light"}
+        color={"white"}
+        fontSize={"lg"}
+      >
+        Action
+      </Text>
     </HStack>
   );
 };

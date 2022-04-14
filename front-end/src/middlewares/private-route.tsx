@@ -10,7 +10,11 @@ const PrivateRoute = () => {
   return isUserLoggedIn ? (
     <Outlet />
   ) : (
-    <Navigate replace to={"/"} state={{ from: state.pathname }} />
+    <Navigate
+      replace
+      to={"/"}
+      state={{ from: state.pathname + state.search }}
+    />
   );
 };
 

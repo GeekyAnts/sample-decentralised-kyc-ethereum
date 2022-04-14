@@ -10,51 +10,74 @@ import {
   Input,
   Pressable,
   Select,
+  Spinner,
   Text,
   VStack,
 } from "native-base";
 import { Layout } from "../../components";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineSave } from "react-icons/ai";
 import React, { useEffect, useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { Card } from "./components";
-import { useAuth } from "../../hooks/useAuth";
 import { toastSuccess, truncateString } from "../../utils";
 import { useAuthContext } from "../../contexts/auth-context";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { useIpfs } from "../../hooks/useIpfs";
+import { convertToBase64 } from "../../utils/imageToBase64";
+import { EditProfileModal } from "./components/edit-modal";
+import { useApi } from "../../hooks/useApi";
+import { Customer, KycServices } from "../../repository";
+import { ConfirmAction } from "./components/confirm-action";
+import { DocumentSkeleton } from "./components/skeleton";
 
 type docsType = {
   id: string;
   type: string;
   documentUrl: string;
 };
-let docsRequired = ["aadhar card", "pan card", "passport", "voter id"];
+let docsRequired = ["aadhar", "pancard", "passport", "voterid"];
+
 export function ProfilePage() {
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [document, setDocument] = useState(docsRequired[0]);
   const [docList, setDocList] = useState(docsRequired);
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileUrl, setFileUrl] = useState<any>("");
   const [allDocs, setAllDocs] = useState<docsType[]>([] as docsType[]);
-  const [showFirstImage, setShowFirstImage] = useState(false);
-  const { disConnect } = useAuth();
+  const [showFirstImage, setShowFirstImage] = useState<boolean>(false);
+  const [myData, setMyData] = useState<Customer>({} as Customer);
   const {
     state: {
-      userDetails: { address },
+      userDetails: { id_ },
     },
   } = useAuthContext();
-  const [userAddress, setUserAddress] = useState(truncateString(address));
+  const [userAddress, setUserAddress] = useState(truncateString(id_));
+  const { upload, getDataFromIpfs } = useIpfs();
+  const { getCustomerDetails, updateDatahash } = useApi();
+  const [showSaveButton, setSaveButton] = useState<boolean>(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [loader, setLoader] = useState<boolean>(true);
+  const [noDocMessage, setNoDocMessage] = useState<boolean>(false);
+  const [saveLoader, setSaveLoader] = useState<boolean>(false);
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const file = e.target.files[0];
-      setFileUrl(URL.createObjectURL(file));
+      const base64 = await convertToBase64(file);
+      setFileUrl(base64);
+      setDocument("");
       setShowModal(false);
     }
   }
 
+  const compareFunction = (
+    allDocItem: docsType,
+    updatedAllDocsItem: docsType
+  ) => allDocItem.type === updatedAllDocsItem.type;
+
   useEffect(() => {
     if (fileUrl !== "") {
-      const temp = [
+      const updatedAllDocs = [
         ...allDocs,
         {
           id: Date.now().toString(),
@@ -62,19 +85,30 @@ export function ProfilePage() {
           type: document,
         },
       ];
-      setAllDocs(temp);
-      // setDocList(
-      //   docList.filter((i: string) => !temp.map((i) => i.type).includes(i))
-      // );
+
+      setAllDocs(updatedAllDocs);
+      setSaveButton(true);
+      setFileUrl("");
     }
   }, [fileUrl]);
 
   function handleDelete(id: string) {
     setShowFirstImage(true);
     setDocument(allDocs.find((i) => i.id === id)?.type || "");
-    setAllDocs((curr) => curr.filter((doc) => doc.id !== id));
-    // const [temp] = allDocs.filter((i) => i.id === id);
-    // setDocList((curr) => [...curr, temp.type]);
+    const updatedAllDocs = allDocs.filter((doc: docsType) => doc.id !== id);
+    if (updatedAllDocs.length === allDocs.length) {
+      console.log("working");
+      const result = allDocs.forEach(
+        (leftValue) =>
+          !updatedAllDocs.some((rightValue) =>
+            compareFunction(leftValue, rightValue)
+          )
+      );
+      console.log(result, "equals");
+    }
+
+    setAllDocs(updatedAllDocs);
+    setSaveButton(true);
     setShowModal(true);
   }
   function handlefirstDocImage(id: string) {
@@ -85,12 +119,91 @@ export function ProfilePage() {
   }
 
   useEffect(() => {
-    setDocList(() =>
-      docsRequired.filter(
+    setDocList(() => {
+      return docsRequired.filter(
         (i: string) => !allDocs.map((i) => i.type).includes(i)
-      )
-    );
+      );
+    });
   }, [allDocs]);
+
+  const uplaodToIpfs = async () => {
+    setSaveLoader(true);
+    const jsonData = JSON.stringify(allDocs);
+    const result = await upload(jsonData);
+    if (result) {
+      updateDatahash(result.path);
+      listenToDahaHashEvent();
+    }
+    setSaveLoader(false);
+  };
+
+  useEffect(() => {
+    if (myData.dataHash) {
+      (async () => {
+        try {
+          const result: any = await getDataFromIpfs(myData.dataHash);
+          setAllDocs(result);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoader(false);
+          setNoDocMessage(false);
+        }
+      })();
+    } else {
+      setLoader(false);
+    }
+  }, [myData]);
+
+  useEffect(() => {
+    if (!loader && !myData.dataHash) {
+      setNoDocMessage(true);
+    }
+  }, [loader]);
+
+  useEffect(() => {
+    (async () => {
+      setLoader(true);
+      const data = await getCustomerDetails(id_);
+      if (data) {
+        setMyData(data);
+      }
+    })();
+  }, [id_]);
+
+  // event CustomerDataUpdated(address id_, string name, string email);
+  // event DataHashUpdated(address id_, string customerName, string dataHash);
+
+  const listenToDahaHashEvent = async () => {
+    KycServices.eventContract.on(
+      "DataHashUpdated",
+      async (id_, customerName, dataHash) => {
+        console.log("event", customerName, dataHash);
+        const data = await getCustomerDetails(id_);
+
+        if (data) {
+          setMyData(data);
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    listenToCustomerDataEvent();
+  }, []);
+
+  const listenToCustomerDataEvent = () => {
+    KycServices.eventContract.on(
+      "CustomerDataUpdated",
+      async (id_, name, email) => {
+        console.log("event", name);
+        const data = await getCustomerDetails(id_);
+        if (data) {
+          setMyData(data);
+        }
+      }
+    );
+  };
 
   return (
     <Layout>
@@ -102,70 +215,72 @@ export function ProfilePage() {
           p="8"
           mt="16"
           borderRadius={"10"}
-          position={"relative"}
-        >
-          <VStack>
-            <HStack alignItems={"center"} justifyContent="space-between" mb="4">
+          position={"relative"}>
+          {loader && (
+            <VStack space="50" justifyContent={"center"} alignItems="center">
+              <Heading>Please wait...</Heading>
+            </VStack>
+          )}
+          {!loader && (
+            <VStack>
               <HStack
-                flexDir={["column", "row"]}
-                alignItems={["flex-start", "center"]}
-              >
-                <Avatar
-                  my="4"
-                  bg="green.500"
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-                  }}
-                  size={["md", "xl"]}
-                >
-                  AJ
-                </Avatar>
-                <Pressable
-                  onHoverIn={() => setUserAddress(address)}
-                  onHoverOut={() => setUserAddress(truncateString(address))}
-                >
-                  <CopyToClipboard
-                    text={address}
-                    onCopy={() => toastSuccess("Address copied successfully")}
-                  >
-                    <Heading size="md" ml={["1", "5"]}>
-                      {userAddress}
-                    </Heading>
-                  </CopyToClipboard>
-                </Pressable>
+                alignItems={"center"}
+                justifyContent="space-between"
+                mb="4">
+                <HStack
+                  flexDir={["column", "row"]}
+                  alignItems={["flex-start", "center"]}>
+                  <Avatar
+                    my="4"
+                    bg="green.500"
+                    source={{
+                      uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                    }}
+                    size={["md", "xl"]}>
+                    AJ
+                  </Avatar>
+                  <Pressable
+                    onHoverIn={() => setUserAddress(id_)}
+                    onHoverOut={() => setUserAddress(truncateString(id_))}>
+                    <CopyToClipboard
+                      text={id_}
+                      onCopy={() =>
+                        toastSuccess("Address copied successfully")
+                      }>
+                      <Heading size="md" ml={["1", "5"]}>
+                        {userAddress}
+                      </Heading>
+                    </CopyToClipboard>
+                  </Pressable>
+                </HStack>
+                <Button
+                  bgColor="blueGray.800"
+                  _hover={{ bgColor: "blueGray.600" }}
+                  onPress={() => setShowEditModal(true)}>
+                  Edit Profile
+                </Button>
               </HStack>
-              {/* <Button
-                top={["5", "0"]}
-                right={["-10", "0"]}
-                size="lg"
-                w="100"
-                position={["absolute", "relative"]}
-                colorScheme="danger"
-                onPress={() => disConnect()}
-              >
-                disconnect
-              </Button> */}
-            </HStack>
-            <HStack flexDir={["column", "row"]} mb="4" space={["12"]}>
-              <FormControl w={["100%", "45%"]}>
-                <FormControl.Label>Email</FormControl.Label>
-                <Input />
-              </FormControl>
-              <FormControl w={["100%", "45%"]}>
-                <FormControl.Label>Name</FormControl.Label>
-                <Input />
-              </FormControl>
-            </HStack>
-            <HStack flexDir={["column", "row"]} space={["12"]}>
-              <FormControl w={["100%", "45%"]}>
-                <FormControl.Label>Phone Number</FormControl.Label>
-                <Input />
-              </FormControl>
-            </HStack>
-          </VStack>
+              <HStack flexDir={["column", "row"]} mb="4" space={["12"]}>
+                <FormControl isDisabled w={["100%", "45%"]}>
+                  <FormControl.Label>Email</FormControl.Label>
+                  <Input value={myData.email} />
+                </FormControl>
+                <FormControl isDisabled w={["100%", "45%"]}>
+                  <FormControl.Label>Name</FormControl.Label>
+                  <Input value={myData.name} />
+                </FormControl>
+              </HStack>
+              <HStack flexDir={["column", "row"]} space={["12"]}>
+                <FormControl isDisabled w={["100%", "45%"]}>
+                  <FormControl.Label>Phone Number</FormControl.Label>
+                  <Input value={myData.mobileNumber} />
+                </FormControl>
+              </HStack>
+            </VStack>
+          )}
         </Box>
         <VStack w={["90vw", "70vw"]} mt="16">
-          <HStack alignItems={"flex-start"} mb="12">
+          <HStack alignItems={"flex-start"} mb="12" space={5}>
             <Heading color={"white"}>Documents</Heading>
             {allDocs.length !== docsRequired.length && (
               <IconButton
@@ -176,6 +291,22 @@ export function ProfilePage() {
                 onPress={() => setShowModal(true)}
                 icon={
                   <AiOutlinePlusCircle style={{ color: "white" }} size="30" />
+                }
+              />
+            )}
+            {allDocs.length > 0 && (
+              <IconButton
+                p="0"
+                mt="1.5"
+                isDisabled={!showSaveButton ? true : false}
+                ml="3"
+                onPress={() => showSaveButton && setShowUploadModal(true)}
+                icon={
+                  saveLoader ? (
+                    <Spinner size="lg" />
+                  ) : (
+                    <AiOutlineSave style={{ color: "white" }} size="30" />
+                  )
                 }
               />
             )}
@@ -194,8 +325,7 @@ export function ProfilePage() {
                 }}
                 accessibilityLabel="Select a position for Menu"
                 mr={["0", "4"]}
-                mb={["4", "0"]}
-              >
+                mb={["4", "0"]}>
                 {docList.map((doc) => (
                   <Select.Item key={doc} label={doc} value={doc} />
                 ))}
@@ -212,7 +342,13 @@ export function ProfilePage() {
             </HStack>
           )}
           <HStack flexWrap={"wrap"}>
-            {allDocs.length !== 0 ? (
+            {loader && (
+              <>
+                <DocumentSkeleton />
+              </>
+            )}
+            {allDocs.length !== 0 &&
+              loader === false &&
               allDocs.map(({ id, documentUrl, type }, idx) => (
                 <Card
                   key={id}
@@ -227,13 +363,24 @@ export function ProfilePage() {
                       : (id: string) => handlefirstDocImage(id)
                   }
                 />
-              ))
-            ) : (
+              ))}
+
+            {myData && !loader && noDocMessage && allDocs.length === 0 && (
               <Text color="white" fontSize={"2xl"} textAlign="center">
                 {showModal ? "" : "No Documents Found"}
               </Text>
             )}
           </HStack>
+          <EditProfileModal
+            data={myData}
+            showModal={showEditModal}
+            setShowModal={setShowEditModal}
+          />
+          <ConfirmAction
+            setModalVisible={setShowUploadModal}
+            modalVisible={showUploadModal}
+            uploadDetails={uplaodToIpfs}
+          />
         </VStack>
       </Center>
     </Layout>

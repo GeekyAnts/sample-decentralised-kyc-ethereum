@@ -1,5 +1,5 @@
+import { Bank, Customer, KycRequest, User } from "../../../repository";
 import { AUTH } from "../action-types";
-import { UserDetails } from "../types";
 
 export function setLoginStatus(payload: boolean) {
   return {
@@ -15,10 +15,37 @@ export function setLoading(payload: boolean) {
   };
 }
 
-export function setUserDetails(payload: UserDetails) {
+export function setUserDetails(payload: User) {
   return {
     type: AUTH.SET_USER_DETAILS,
     payload,
+  };
+}
+
+export function setData(payload: {
+  data: (Customer | Bank | User | KycRequest)[];
+  totalPages: number;
+  currentPage: number;
+}) {
+  return {
+    type: AUTH.SET_DATA,
+    payload,
+  };
+}
+
+export function setFetchedData(payload: {
+  pageNo: string;
+  data: (Customer | Bank | User | KycRequest)[];
+}) {
+  return {
+    type: AUTH.SET_FETCHED_DATA,
+    payload,
+  };
+}
+
+export function kycRequestStatus() {
+  return {
+    type: AUTH.SET_KYC_REQUEST,
   };
 }
 

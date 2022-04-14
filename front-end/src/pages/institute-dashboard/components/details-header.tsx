@@ -20,7 +20,7 @@ export const DetailsHeader = () => {
       </Box>
       <VStack textAlign={"center"} width={"1/6"}>
         <Text fontWeight={"light"} color={"white"} fontSize={"lg"}>
-          Updated At
+          Notes
         </Text>
       </VStack>
       <Box textAlign={"center"} width="1/6">
@@ -29,11 +29,16 @@ export const DetailsHeader = () => {
         </Text>
       </Box>
 
-      <Center width="1/6" textAlign={"center"}>
-        <Text fontWeight={"light"} color={"white"} fontSize={"lg"}>
-          Action
-        </Text>
-      </Center>
+      <Text
+        width="1/6"
+        textAlign={"right"}
+        fontWeight={"light"}
+        color={"white"}
+        fontSize={"lg"}
+        mr="4"
+      >
+        Actions
+      </Text>
     </HStack>
   );
 };

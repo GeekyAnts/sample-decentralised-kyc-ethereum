@@ -1,23 +1,25 @@
-import { Button, Modal, Text } from "native-base";
+import { Button, FormControl, Modal } from "native-base";
 
 export function ConfirmAction({
   modalVisible,
   setModalVisible,
-  heading,
-  setApproval,
+  uploadDetails,
 }: {
   modalVisible: boolean;
   setModalVisible: Function;
-  heading: string;
-  setApproval: Function;
+  uploadDetails: Function;
 }) {
   return (
     <Modal isOpen={modalVisible} onClose={setModalVisible} size={"md"}>
-      <Modal.Content maxH="212">
+      <Modal.Content maxH="350">
         <Modal.CloseButton />
-        <Modal.Header>{heading}</Modal.Header>
+        <Modal.Header>Please Confirm</Modal.Header>
         <Modal.Body>
-          <Text>This action can not be undone!</Text>
+          <FormControl>
+            <FormControl.Label>
+              {"You're updating your documents, Are you sure you want to do it"}
+            </FormControl.Label>
+          </FormControl>
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
@@ -26,17 +28,17 @@ export function ConfirmAction({
               colorScheme="blueGray"
               onPress={() => {
                 setModalVisible(false);
-              }}
-            >
+              }}>
               cancel
             </Button>
             <Button
-              bg={"danger.600"}
+              bgColor="blueGray.800"
+              _hover={{ bgColor: "blueGray.600" }}
               onPress={() => {
-                setApproval();
-              }}
-            >
-              ok
+                uploadDetails();
+                setModalVisible(false);
+              }}>
+              Yes
             </Button>
           </Button.Group>
         </Modal.Footer>

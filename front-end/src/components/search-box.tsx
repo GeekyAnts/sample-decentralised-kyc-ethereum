@@ -4,9 +4,11 @@ import { AiOutlineSearch } from "react-icons/ai";
 export const SearchBox = ({
   setSearchText,
   searchText,
+  searchOperation,
 }: {
   setSearchText: (arg0: string) => void;
   searchText: string;
+  searchOperation: Function;
 }) => {
   return (
     <Input
@@ -17,7 +19,14 @@ export const SearchBox = ({
       onChangeText={setSearchText}
       fontSize={"md"}
       color={"white"}
-      InputRightElement={<AiOutlineSearch color="white" size={30} />}
+      InputRightElement={
+        <AiOutlineSearch
+          onClick={() => searchOperation()}
+          color="white"
+          cursor={"pointer"}
+          size={30}
+        />
+      }
       borderColor="yellow.400"
     />
   );

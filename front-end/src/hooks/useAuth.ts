@@ -8,15 +8,15 @@ import {
   useAuthContext,
   setLoading,
 } from "../contexts/auth-context";
-import { UserDetails } from "../contexts/auth-context/types";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useApi } from "./useApi";
 let web3: Web3 | undefined = undefined;
 
 export function useAuth() {
   const { dispatch } = useAuthContext();
   let navigate = useNavigate();
   const state = useLocation();
-
+  const { getUserDetails } = useApi();
   const connect = useCallback(async function handleLogin() {
     try {
       if (!(window as any).ethereum) {
@@ -40,14 +40,21 @@ export function useAuth() {
         localStorage.setItem("walletAddress", accounts[0]);
         const publicAddress = accounts[0];
         if (publicAddress !== "") {
-          dispatch(
-            setUserDetails({
-              address: publicAddress,
-              type: "customer",
-            })
-          );
-          dispatch(setLoginStatus(true));
-          navigate((state.state as any)?.from || "/");
+          const data = await getUserDetails();
+          console.log(data);
+          if (data) {
+            dispatch(
+              setUserDetails({
+                status: data.status,
+                email: data.email,
+                id_: data.id_,
+                name: data.name,
+                role: data.role,
+              })
+            );
+            dispatch(setLoginStatus(true));
+            navigate((state.state as any)?.from || "/");
+          }
         }
       } else {
         toastError("allow metamask! No accounts found");
@@ -65,14 +72,21 @@ export function useAuth() {
         web3 = new Web3((window as any).ethereum);
         const accounts = await web3?.eth.getAccounts();
         if (accounts.length !== 0) {
-          const temp: UserDetails = {
-            address: accounts[0],
-            type: "admin",
-          };
-          dispatch(setUserDetails(temp));
-          dispatch(setLoginStatus(true));
-          dispatch(setLoading(false));
-          navigate((state.state as any)?.from || "/");
+          const data = await getUserDetails();
+          if (data) {
+            dispatch(
+              setUserDetails({
+                status: data.status,
+                email: data.email,
+                id_: data.id_,
+                name: data.name,
+                role: data.role,
+              })
+            );
+            dispatch(setLoginStatus(true));
+            dispatch(setLoading(false));
+            navigate((state.state as any)?.from || "/");
+          }
         }
       }
     } catch (e) {
@@ -84,10 +98,6 @@ export function useAuth() {
   }, []);
 
   const disConnect = useCallback(async () => {
-    // if(!web3){
-    //   web3 = new Web3((window as any).ethereum);
-    //   window.on('accountsChanged', handler: (accounts: Array<string>) => void);
-    // }
     dispatch(resetStates());
     dispatch(setLoginStatus(false));
   }, []);
