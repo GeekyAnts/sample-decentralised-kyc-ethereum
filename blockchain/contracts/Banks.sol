@@ -51,23 +51,12 @@ contract Banks {
         returns (uint256 totalPages, Types.Bank[] memory)
     {
         require(pageNumber > 0, "PN should be > 0");
-        uint256 reminder_ = bankList.length % 25;
-        uint256 pages = bankList.length / 25;
-        if (reminder_ > 0) pages++;
-
-        uint256 pageLength_ = 25;
-        uint256 startIndex_ = 25 * (pageNumber - 1);
-        uint256 endIndex_ = 25 * pageNumber;
-
-        if (pageNumber > pages) {
-            // Page requested is not existing
-            pageLength_ = 0;
-            endIndex_ = 0;
-        } else if (pageNumber == pages && reminder_ > 0) {
-            // Last page where we don't had 25 records
-            pageLength_ = reminder_;
-            endIndex_ = bankList.length;
-        }
+        (
+            uint256 pages,
+            uint256 pageLength_,
+            uint256 startIndex_,
+            uint256 endIndex_
+        ) = Helpers.getIndexes(pageNumber, bankList);
 
         Types.Bank[] memory banksList_ = new Types.Bank[](pageLength_);
         for (uint256 i = startIndex_; i < endIndex_; i++)
